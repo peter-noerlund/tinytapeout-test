@@ -1,7 +1,7 @@
 project:
   wokwi_id: 0
   source_files:
-    - rtl/pchri03_top.v
+    - src/pchri03_top.v
   top_module: pchri03_top
   tiles: 1x1
 yaml_version: 4

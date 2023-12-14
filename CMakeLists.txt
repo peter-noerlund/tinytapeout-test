@@ -5,7 +5,7 @@ project(tinytapeout-test LANGUAGES CXX)
 find_program(IVERILOG_PATH NAMES iverilog HINTS ${IVERILOG_ROOT} ENV IVERILOG_ROOT REQUIRED)
 find_program(VVP_PATH NAMES vvp HINTS ${IVERILOG_ROOT} ENV IVERILOG_ROOT REQUIRED)
 
-add_executable(run src/run.cpp)
+add_executable(run tools/run.cpp)
 target_compile_features(run PRIVATE cxx_std_20)
 target_compile_definitions(run PRIVATE VVP_PATH="${VVP_PATH}" DESIGN="tb")
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -19,7 +19,7 @@ add_custom_target(
     COMMAND_EXPAND_LISTS
     VERBATIM
     SOURCES
-        rtl/pchri03_top.v
-        rtl/tb.v
+        src/pchri03_top.v
+        src/tb.v
 )
 add_dependencies(run testbench)
