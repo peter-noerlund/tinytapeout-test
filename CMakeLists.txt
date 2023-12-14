@@ -19,7 +19,7 @@ add_custom_target(
     COMMAND_EXPAND_LISTS
     VERBATIM
     SOURCES
+        rtl/pchri03_top.v
         rtl/tb.v
-        rtl/top.v
 )
 add_dependencies(run testbench)
