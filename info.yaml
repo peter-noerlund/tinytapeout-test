@@ -1,0 +1,31 @@
+project:
+  wokwi_id: 0
+  source_files:
+    - rtl/top.v
+  top_module: top
+  tiles: 1x1
+yaml_version: 4
+documentation:
+  author: Peter Nørlund
+  title: Counter test
+  language: Verilog
+  description: "Counts up every clock cycle"
+  how_it_works: |
+    Every cycle, the value of the output pins are incremented
+  how_to_test: |
+    The counter counts non-stop
+  outputs:
+    - bit 0
+    - bit 1
+    - bit 2
+    - bit 3
+    - bit 4
+    - bit 5
+    - bit 6
+    - bit 7
+  tag: timer, test
+  external_hw: ""
+  discord: pchri03
+  doc_link: ""
+  clock_hz: 50000000
+  picture: ""
