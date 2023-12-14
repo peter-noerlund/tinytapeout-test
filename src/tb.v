@@ -13,7 +13,7 @@ module tb();
     wire [7:0] uio_out;
     wire [7:0] uio_oe;
 
-    pchri03_top top(
+    tt_um_pchri03_top top(
         .clk(clk),
         .rst_n(rst_n),
         .ena(ena),

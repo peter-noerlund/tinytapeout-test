@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module pchri03_top
+module tt_um_pchri03_top
     (
         input clk,                  //! Clock
         input rst_n,                //! Reset
