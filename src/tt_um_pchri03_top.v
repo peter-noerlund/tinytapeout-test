@@ -6,12 +6,8 @@ module tt_um_pchri03_top
         input rst_n,                //! Reset
         input ena,                  //! Enable
 
-        input [7:0] ui_in,          //! Input ports
-
         output [7:0] uo_out,        //! Output ports
 
-        input [7:0] uio_in,         //! In/Out ports (In)
-        output [7:0] uio_out,       //! In/Out ports (Out)
         output [7:0] uio_oe         //! In/Out ports (Output enable)
     );
 
