@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns/1ns
 
 module tb();
@@ -10,13 +11,17 @@ module tb();
     wire [7:0] uo_out;
 
     reg [7:0] uio_in;
+    wire [7:0] uio_out;
     wire [7:0] uio_oe;
 
     tt_um_pchri03_top top(
         .clk(clk),
         .rst_n(rst_n),
         .ena(ena),
+        .ui_in(ui_in),
         .uo_out(uo_out),
+        .uio_in(uio_in),
+        .uio_out(uio_out),
         .uio_oe(uio_oe)
     );
 
