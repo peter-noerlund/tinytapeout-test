@@ -9,16 +9,7 @@ module spi_controller
         input wire sclk,
         input wire cs,
         input wire [7:0] mosi,
-        output reg [7:0] miso,
-        //! @end
-
-        output wire [63:0] characters,
-        output wire [63:0] masks,
-        input wire [7:0] result,
-
-        //! @virtualbus M_AXIS @dir output
-        output reg m_axis_tvalid,
-        output reg [7:0] m_axis_tdata
+        output reg [7:0] miso
         //! @end
     );
 
@@ -34,9 +25,15 @@ module spi_controller
         STATE_STREAM=3'b100;
 
     reg [127:0] mem;
+    reg [7:0] result;
     reg [3:0] addr;
     reg [2:0] state;
 
+    wire [63:0] characters;
+    wire [63:0] masks;
+
+    integer i;
+    
     assign characters = mem[63:0];
     assign masks = mem[127:64];
 
@@ -75,6 +72,11 @@ module spi_controller
                 end
 
                 STATE_STREAM: begin
+                    for (i = 0; i != 8; i = i + 1) begin
+                        if (mosi[i] == characters[i * 8 + 7 -: 8]) begin
+                            result <= result | masks[i * 8 + 7 -: 8];
+                        end
+                    end
                     state <= STATE_IDLE;
                 end
 
@@ -82,13 +84,6 @@ module spi_controller
                     state <= STATE_IDLE;
                 end
             endcase
-        end
-
-        if (state == STATE_STREAM) begin
-            m_axis_tdata <= mosi;
-            m_axis_tvalid <= 1'b1;
-        end else begin
-            m_axis_tvalid <= 1'b0;
         end
     end
 endmodule
