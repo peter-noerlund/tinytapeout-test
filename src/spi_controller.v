@@ -80,7 +80,6 @@ module spi_controller
                 STATE_STREAM: begin
                     for (i = 0; i != 8; i = i + 1) begin
                         if (mosi == characters[i * 8 + 7 -: 8]) begin
-                            $display("i=%x, masks=%b", i, masks[i * 8 + 7 -: 8]);
                             result <= result | masks[i * 8 + 7 -: 8];
                         end
                     end
