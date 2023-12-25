@@ -19,7 +19,6 @@ add_custom_target(
     COMMAND_EXPAND_LISTS
     VERBATIM
     SOURCES
-        src/accumulator.v
         src/comparator.v
         src/levenshtein.v
         src/spi_controller.v

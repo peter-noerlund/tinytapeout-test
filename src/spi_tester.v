@@ -24,10 +24,10 @@ module spi_tester
     always @ (posedge sclk) begin
         if (enable) begin
             if ($feof(fd)) begin
-                cs <= 1'b0;
+                cs <= 1'b1;
             end else begin
                 status <= $fread(mosi, fd);
-                cs <= 1'b1;
+                cs <= 1'b0;
             end
         end
     end

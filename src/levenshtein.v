@@ -32,7 +32,7 @@ module levenshtein
         //! @virtualbus M_AXIS @dir output Output stream
         output reg m_axis_tvalid,
         (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TDATA" *)
-        output wire [DISTANCE_WIDTH - 1 : 0] m_axis_tdata,
+        output reg [DISTANCE_WIDTH - 1 : 0] m_axis_tdata,
         (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TLAST" *)
         output reg m_axis_tlast
         //! @end
@@ -64,8 +64,6 @@ module levenshtein
     assign hn_prev = hn_reg;
     assign d_prev = d_reg;
     assign pm = s_axis_tdata;
-
-    assign m_axis_tdata = d_reg;
 
     // d0[j] = (((pm[j] & hp[j - 1]) + hp[j - 1]) ^ hp[j - 1]) | pm[j] | hn[j - 1]
     assign d0 = (((pm & hp_prev) + hp_prev) ^ hp_prev) | pm | hn_prev;
@@ -113,6 +111,7 @@ module levenshtein
         if (aresetn && s_axis_tvalid) begin
             if (s_axis_tuser) begin
                 m_axis_tvalid <= 1'b1;
+                m_axis_tdata <= d_reg;
             end else begin
                 if (increment && !decrement) begin
                     d_reg <= d_prev + 1;

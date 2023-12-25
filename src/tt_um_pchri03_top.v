@@ -16,7 +16,6 @@ module tt_um_pchri03_top
         output wire [7:0] uio_oe         //! In/Out ports (Output enable)
     );
 
-    wire sclk;
     wire cs;
     wire [7:0] mosi;
     wire [7:0] miso;
@@ -25,7 +24,6 @@ module tt_um_pchri03_top
     wire [7:0] result_mask;
     wire [63:0] characters;
     wire [63:0] masks;
-    wire [63:0] result_ids;
     
     wire aclk;
     wire aresetn;
@@ -41,7 +39,8 @@ module tt_um_pchri03_top
     wire levenshtein_tvalid;
     wire [7:0] levenshtein_tdata;
 
-    assign sclk = clk;
+    assign aclk = clk;
+    assign aresetn = rst_n;
     assign cs = uio_in[0];
     assign mosi = ui_in;
     assign uo_out = miso;
@@ -49,9 +48,9 @@ module tt_um_pchri03_top
     assign uio_out = 8'b00000000;
     
     spi_controller controller(
-        .rst_n(rst_n),
+        .aclk(aclk),
+        .aresetn(aresetn),
 
-        .sclk(sclk),
         .cs(cs),
         .mosi(mosi),
         .miso(miso),
@@ -60,14 +59,13 @@ module tt_um_pchri03_top
         .result_mask(result_mask),
         .characters(characters),
         .masks(masks),
-        .result_ids(result_ids),
 
-        .aclk(aclk),
-        .aresetn(aresetn),
-        
         .m_axis_tvalid(controller_tvalid),
         .m_axis_tdata(controller_tdata),
-        .m_axis_tuser(controller_tuser)
+        .m_axis_tuser(controller_tuser),
+
+        .s_axis_tvalid(levenshtein_tvalid),
+        .s_axis_tdata(levenshtein_tdata)
     );
 
     comparator comparator(
@@ -100,16 +98,5 @@ module tt_um_pchri03_top
 
         .m_axis_tvalid(levenshtein_tvalid),
         .m_axis_tdata(levenshtein_tdata)
-    );
-
-    accumulator #(.ID_WIDTH(8)) accumulator(
-        .aclk(aclk),
-        .aresetn(aresetn),
-
-        .s_axis_tvalid(levenshtein_tvalid),
-        .s_axis_tdata(levenshtein_tdata),
-        .s_axis_tlast(1'b0),
-
-        .ids(result_ids)
     );
 endmodule

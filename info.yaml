@@ -1,7 +1,6 @@
 project:
   wokwi_id: 0
   source_files:
-    - accumulator.v
     - comparator.v
     - levenshtein.v
     - spi_controller.v
