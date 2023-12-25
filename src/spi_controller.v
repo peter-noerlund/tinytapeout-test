@@ -3,7 +3,10 @@
 
 module spi_controller
     (
+        input wire rst_n,
+
         //! @virtualbus S_SPI @dir input
+        input wire sclk,
         input wire cs,
         input wire [7:0] mosi,
         output reg [7:0] miso,
@@ -14,8 +17,8 @@ module spi_controller
         output reg [63:0] characters,
         output reg [63:0] masks,
 
-        input wire aclk,
-        input wire aresetn,
+        output wire aclk,
+        output reg aresetn,
 
         //! @virtualbus M_AXIS @dir output
         output reg m_axis_tvalid,
@@ -40,10 +43,12 @@ module spi_controller
     */
 
     localparam [7:0]
-        CMD_NOOP  = 8'b00000000,
-        CMD_END   = 8'b00000001,
-        CMD_READ  = 8'b00000010,
-        CMD_WRITE = 8'b00000011;
+        CMD_NOOP    = 8'b00000000,
+        CMD_END     = 8'b00000001,
+        CMD_READ    = 8'b00000010,
+        CMD_WRITE   = 8'b00000011,
+        CMD_ENABLE  = 8'b00000100,
+        CMD_DISABLE = 8'b00000101;
 
     localparam [1:0]
         AREA_CONTROL = 2'b00,
@@ -75,15 +80,19 @@ module spi_controller
     
     assign read_area = mosi[4:3];
     assign read_addr = mosi[2:0];
+    assign aclk = sclk;
 
-    always @ (posedge aclk) begin
-        if (!aresetn) begin
+    always @ (posedge sclk) begin
+        if (!rst_n) begin
             state <= STATE_IDLE;
             m_axis_tvalid <= 1'b0;
+            aresetn <= 1'b0;
         end else begin
             if (!cs) begin
+                $display("data=%x", mosi);
                 case (state)
                     STATE_IDLE: begin
+                        $display("cmd=%x", mosi);
                         if (mosi == CMD_READ) begin
                             state <= STATE_READ;
                             m_axis_tvalid <= 1'b0;
@@ -94,7 +103,11 @@ module spi_controller
                             m_axis_tvalid <= 1'b1;
                             m_axis_tuser <= 1'b1;
                             m_axis_tdata <= mosi;
-                        end else begin
+                        end else if (mosi == CMD_ENABLE) begin
+                            aresetn <= 1'b1;
+                        end else if (mosi == CMD_DISABLE) begin
+                            aresetn <= 1'b0;
+                        end else if (aresetn) begin
                             m_axis_tvalid <= 1'b1;
                             m_axis_tuser <= 1'b0;
                             m_axis_tdata <= mosi;
@@ -155,7 +168,7 @@ module spi_controller
         if (s_axis_tvalid) begin
             result_ids[offset * 8 + 7 -: 8] <= s_axis_tdata;
             offset <= offset + 1;
-        end else if (!cs && state == STATE_WRITE_ADDR && write_addr == REG_OFFSET) begin
+        end else if (!cs && state == STATE_WRITE_ADDR && write_area == AREA_CONTROL && write_addr == REG_OFFSET) begin
             offset <= mosi[2:0];
         end
     end

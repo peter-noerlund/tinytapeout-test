@@ -25,6 +25,7 @@ module tt_um_pchri03_top
     wire [63:0] characters;
     wire [63:0] masks;
     
+    wire sclk;
     wire aclk;
     wire aresetn;
 
@@ -39,8 +40,7 @@ module tt_um_pchri03_top
     wire levenshtein_tvalid;
     wire [7:0] levenshtein_tdata;
 
-    assign aclk = clk;
-    assign aresetn = rst_n;
+    assign sclk = clk;
     assign cs = uio_in[0];
     assign mosi = ui_in;
     assign uo_out = miso;
@@ -48,8 +48,8 @@ module tt_um_pchri03_top
     assign uio_out = 8'b00000000;
     
     spi_controller controller(
-        .aclk(aclk),
-        .aresetn(aresetn),
+        .sclk(clk),
+        .rst_n(rst_n),
 
         .cs(cs),
         .mosi(mosi),
@@ -59,6 +59,9 @@ module tt_um_pchri03_top
         .result_mask(result_mask),
         .characters(characters),
         .masks(masks),
+
+        .aclk(aclk),
+        .aresetn(aresetn),
 
         .m_axis_tvalid(controller_tvalid),
         .m_axis_tdata(controller_tdata),

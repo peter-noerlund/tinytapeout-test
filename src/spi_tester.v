@@ -15,6 +15,7 @@ module spi_tester
 
     integer fd;
     integer status;
+    reg [7:0] buffer;
 
     initial begin
         fd = $fopen(FILENAME, "rb");
@@ -26,7 +27,8 @@ module spi_tester
             if ($feof(fd)) begin
                 cs <= 1'b1;
             end else begin
-                status <= $fread(mosi, fd);
+                status <= $fread(buffer, fd);
+                mosi <= buffer;
                 cs <= 1'b0;
             end
         end
