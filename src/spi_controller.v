@@ -131,8 +131,6 @@ module spi_controller
                                     word_size <= mosi;
                                 end else if (write_addr == REG_MASK) begin
                                     result_mask <= mosi;
-                                end else if (write_addr == REG_OFFSET) begin
-                                    offset <= mosi[2:0];
                                 end
                             end
                             AREA_CHAR: characters[write_addr * 8 + 7 -: 8] <= mosi;
@@ -157,6 +155,8 @@ module spi_controller
         if (s_axis_tvalid) begin
             result_ids[offset * 8 + 7 -: 8] <= s_axis_tdata;
             offset <= offset + 1;
+        end else if (!cs && state == STATE_WRITE_ADDR && write_addr == REG_OFFSET) begin
+            offset <= mosi[2:0];
         end
     end
 endmodule
