@@ -19,6 +19,7 @@ module tt_um_pchri03_top
     assign uio_oe = 8'b01100000;
 
     assign uio_out[7] = 1'b0;
+    assign uio_out[4:0] = 5'b00000;
 
     apb_register #(.ADDR_WIDTH(3), .DATA_WIDTH(8)) ram(
         .pclk(clk),
