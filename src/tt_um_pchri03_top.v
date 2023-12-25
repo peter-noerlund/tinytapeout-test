@@ -16,23 +16,86 @@ module tt_um_pchri03_top
         output wire [7:0] uio_oe         //! In/Out ports (Output enable)
     );
 
-    assign uio_oe = 8'b11000000;
+    wire sclk;
+    wire cs;
+    wire [7:0] mosi;
+    wire [7:0] miso;
 
-    assign uio_out[5:0] = 5'b00000;
+    wire [63:0] characters;
+    wire [63:0] masks;
+    wire [7:0] result;
 
-    apb_register #(.ADDR_WIDTH(4), .DATA_WIDTH(8)) ram(
-        .pclk(clk),
-        .presetn(rst_n),
-        .paddr(uio_in[3:0]),
-        .pprot(3'b000),
-        .psel(ena),
-        .penable(uio_in[4]),
-        .pwrite(uio_in[5]),
-        .pwdata(ui_in),
-        .pstrb(1'b1),
-        .pready(uio_out[6]),
-        .prdata(uo_out),
-        .pslverr(uio_out[7])
+    wire aclk;
+    wire aresetn;
+
+    wire controller_tvalid;
+    wire [7:0] controller_tdata;
+
+    wire comparator_tvalid;
+    wire [7:0] comparator_tdata;
+
+    wire encoder_tvalid;
+    wire [7:0] encoder_tdata;
+
+    assign sclk = clk;
+    assign cs = uio_in[0];
+    assign mosi = ui_in;
+    assign miso = uo_out;
+    assign uio_oe = 8'b00000000;
+    assign uio_out = 8'b00000000;
+    
+    assign aclk = clk;
+    assign aresetn = rst_n;
+
+    spi_controller spi_controller(
+        .rst_n(rst_n),
+
+        .sclk(sclk),
+        .cs(cs),
+        .mosi(mosi),
+        .miso(miso),
+
+        .characters(characters),
+        .masks(masks),
+        .result(result),
+
+        .m_axis_tvalid(controller_tvalid),
+        .m_axis_tdata(controller_tdata)
     );
 
+    comparator comparator(
+        .aclk(aclk),
+        .aresetn(aresetn),
+
+        .s_axis_tvalid(controller_tvalid),
+        .s_axis_tdata(controller_tdata),
+
+        .characters(characters),
+
+        .m_axis_tvalid(comparator_tvalid),
+        .m_axis_tdata(comparator_tdata)
+    );
+
+    encoder encoder(
+        .aclk(aclk),
+        .aresetn(aresetn),
+
+        .s_axis_tvalid(comparator_tvalid),
+        .s_axis_tdata(comparator_tdata),
+
+        .masks(masks),
+
+        .m_axis_tvalid(encoder_tvalid),
+        .m_axis_tdata(encoder_tdata)
+    );
+
+    test_algo algo(
+        .aclk(aclk),
+        .aresetn(aresetn),
+        
+        .s_axis_tvalid(encoder_tvalid),
+        .s_axis_tdata(encoder_tdata),
+
+        .result(result)
+    );
 endmodule

@@ -19,8 +19,11 @@ add_custom_target(
     COMMAND_EXPAND_LISTS
     VERBATIM
     SOURCES
-        src/apb_register.v
+        src/comparator.v
+        src/encoder.v
+        src/spi_controller.v
         src/tb.v
+        src/test_algo.v
         src/tt_um_pchri03_top.v
 )
 add_dependencies(run testbench)
