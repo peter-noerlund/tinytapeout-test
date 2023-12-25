@@ -7,7 +7,7 @@ project:
     - test_algo.v
     - tt_um_pchri03_top.v
   top_module: tt_um_pchri03_top
-  tiles: 8x2
+  tiles: 1x1
 yaml_version: 4
 documentation:
   author: Peter Nørlund
