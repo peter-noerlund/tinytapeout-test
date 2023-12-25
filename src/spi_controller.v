@@ -89,10 +89,8 @@ module spi_controller
             aresetn <= 1'b0;
         end else begin
             if (!cs) begin
-                $display("data=%x", mosi);
                 case (state)
                     STATE_IDLE: begin
-                        $display("cmd=%x", mosi);
                         if (mosi == CMD_READ) begin
                             state <= STATE_READ;
                             m_axis_tvalid <= 1'b0;
