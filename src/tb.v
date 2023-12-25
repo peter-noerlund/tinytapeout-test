@@ -178,6 +178,13 @@ module tb();
         mosi = 8'b00000000;
 
         #20
+        mosi = CMD_WRITE;
+        #20
+        mosi = 8'h10;
+        #20
+        mosi = 8'h10;
+
+        #20
         mosi = CMD_STREAM;
         #20
         mosi = 8'h61;
@@ -198,9 +205,6 @@ module tb();
         mosi = 8'h64;
 
         #20
-        cs = 1'b1;
-
-        #80
         cs = 1'b0;
         mosi = CMD_READ;
         #20

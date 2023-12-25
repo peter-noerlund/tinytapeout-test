@@ -26,6 +26,7 @@ module spi_controller
 
     reg [127:0] mem;
     reg [7:0] result;
+    reg result_addr;
     reg [3:0] addr;
     reg [2:0] state;
 
@@ -63,17 +64,23 @@ module spi_controller
 
                 STATE_WRITE: begin
                     addr <= mosi[3:0];
+                    result_addr <= mosi[4];
                     state <= STATE_WRITE_ADDR;
                 end
 
                 STATE_WRITE_ADDR: begin
-                    mem[addr * 8 + 7 -: 8] <= mosi;
+                    if (result_addr) begin
+                        result <= mosi;
+                    end else begin
+                        mem[addr * 8 + 7 -: 8] <= mosi;
+                    end
                     state <= STATE_IDLE;
                 end
 
                 STATE_STREAM: begin
                     for (i = 0; i != 8; i = i + 1) begin
-                        if (mosi[i] == characters[i * 8 + 7 -: 8]) begin
+                        if (mosi == characters[i * 8 + 7 -: 8]) begin
+                            $display("i=%x, masks=%b", i, masks[i * 8 + 7 -: 8]);
                             result <= result | masks[i * 8 + 7 -: 8];
                         end
                     end
