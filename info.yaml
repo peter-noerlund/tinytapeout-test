@@ -1,6 +1,7 @@
 project:
   wokwi_id: 0
   source_files:
+    - apb_register.v
     - tt_um_pchri03_top.v
   top_module: tt_um_pchri03_top
   tiles: 1x1
