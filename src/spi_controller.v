@@ -68,7 +68,7 @@ module spi_controller
     integer i;
     
     assign read_area = mosi[4:3];
-    assign read_addr = mosi[3:0];
+    assign read_addr = mosi[2:0];
     assign aclk = sclk;
 
     always @ (posedge sclk) begin
