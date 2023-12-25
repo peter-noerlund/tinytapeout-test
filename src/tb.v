@@ -5,7 +5,7 @@ module tb();
     reg pclk;
     reg presetn;
     reg psel;
-    reg [2:0] paddr;
+    reg [3:0] paddr;
     reg penable;
     reg pwrite;
     reg [7:0] pwdata;
@@ -27,8 +27,11 @@ module tb();
     assign ena = psel;
     assign ui_in = pwdata;
     assign uo_out = prdata;
-    assign uio_in = {3'bxxx, pwrite, penable, paddr};
-    assign uio_out = {1'bx, pslverr, pready, 5'bxxxxx};
+    assign uio_in[3:0] = paddr;
+    assign uio_in[4] = penable;
+    assign uio_in[5] = pwrite;
+    assign uio_out[6] = pready;
+    assign uio_out[7] = pslverr;
 
     tt_um_pchri03_top top(
         .clk(clk),
