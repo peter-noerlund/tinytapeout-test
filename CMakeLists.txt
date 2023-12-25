@@ -23,6 +23,7 @@ add_custom_target(
         src/comparator.v
         src/levenshtein.v
         src/spi_controller.v
+        src/spi_tester.v
         src/tb.v
         src/tt_um_pchri03_top.v
 )

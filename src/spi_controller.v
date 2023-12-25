@@ -41,9 +41,9 @@ module spi_controller
     localparam [7:0]
         CMD_READ = 8'b00000011,
         CMD_WRITE = 8'b00000010,
-        CMD_ENABLE = 8'b10000001,
-        CMD_STREAM = 8'b10000010,
-        CMD_DISABLE = 8'b10000011;
+        CMD_ENABLE = 8'b10000000,
+        CMD_STREAM = 8'b10000001,
+        CMD_DISABLE = 8'b10000010;
 
     localparam [1:0]
         AREA_CONTROL = 2'b00,
@@ -67,7 +67,8 @@ module spi_controller
 
     integer i;
     
-    assign read_addr = mosi[4:0];
+    assign read_area = mosi[4:3];
+    assign read_addr = mosi[3:0];
     assign aclk = sclk;
 
     always @ (posedge sclk) begin

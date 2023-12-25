@@ -44,7 +44,7 @@ module tt_um_pchri03_top
     assign sclk = clk;
     assign cs = uio_in[0];
     assign mosi = ui_in;
-    assign miso = uo_out;
+    assign uo_out = miso;
     assign uio_oe = 8'b00000000;
     assign uio_out = 8'b00000000;
     
