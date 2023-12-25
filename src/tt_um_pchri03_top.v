@@ -48,7 +48,7 @@ module tt_um_pchri03_top
     assign uio_out = 8'b00000000;
     
     spi_controller controller(
-        .sclk(clk),
+        .sclk(sclk),
         .rst_n(rst_n),
 
         .cs(cs),

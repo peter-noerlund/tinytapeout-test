@@ -68,7 +68,7 @@ module spi_controller
         REG_OFFSET=4'h2;
 
     reg [1:0] write_area;
-    reg [3:0] write_addr;
+    reg [2:0] write_addr;
     reg [1:0] state;
     reg [2:0] offset;
     reg [63:0] result_ids;
@@ -76,8 +76,7 @@ module spi_controller
     wire [1:0] read_area;
     wire [2:0] read_addr;
 
-    integer i;
-    
+   
     assign read_area = mosi[4:3];
     assign read_addr = mosi[2:0];
     assign aclk = sclk;

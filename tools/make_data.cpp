@@ -145,9 +145,6 @@ static void makeData(std::string_view word, const std::filesystem::path& wordsFi
 
         if (++count % 8 == 0)
         {
-            writeCommand(out, Command::Noop);
-            writeCommand(out, Command::Noop);
-            writeCommand(out, Command::Noop);
             readData(out, Register::Result0);
             readData(out, Register::Result1);
             readData(out, Register::Result2);
