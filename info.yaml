@@ -1,6 +1,9 @@
 project:
   wokwi_id: 0
   source_files:
+    - accumulator.v
+    - comparator.v
+    - levenshtein.v
     - spi_controller.v
     - tt_um_pchri03_top.v
   top_module: tt_um_pchri03_top
