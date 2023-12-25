@@ -16,17 +16,23 @@ module tt_um_pchri03_top
         output wire [7:0] uio_oe         //! In/Out ports (Output enable)
     );
 
-    reg [7:0] counter;
+    assign uio_oe = 8'b01100000;
 
-    assign uio_oe = 8'b00000000;
-    assign uio_out = 8'b00000000;
-    assign uo_out = counter;
+    assign uio_out[7] = 1'b0;
 
-    always @ (posedge clk) begin
-        if (!rst_n) begin
-            counter <= 8'h00;
-        end else if (ena) begin
-            counter <= counter + 8'h01;
-        end
-    end
+    apb_register #(.ADDR_WIDTH(3), .DATA_WIDTH(8)) ram(
+        .pclk(clk),
+        .presetn(rst_n),
+        .paddr(uio_in[2:0]),
+        .pprot(3'b000),
+        .psel(ena),
+        .penable(uio_in[3]),
+        .pwrite(uio_in[4]),
+        .pwdata(ui_in),
+        .pstrb(1'b1),
+        .pready(uio_out[5]),
+        .prdata(uio_out),
+        .pslverr(uio_out[6])
+    );
+
 endmodule

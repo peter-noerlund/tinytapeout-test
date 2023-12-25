@@ -2,17 +2,33 @@
 `timescale 1ns/1ns
 
 module tb();
-    reg clk;
-    reg rst_n;
-    reg ena;
+    reg pclk;
+    reg presetn;
+    reg psel;
+    reg [2:0] paddr;
+    reg penable;
+    reg pwrite;
+    reg [7:0] pwdata;
+    wire pready;
+    wire [7:0] prdata;
+    wire pslverr;
 
-    reg [7:0] ui_in;
-
+    wire clk;
+    wire rst_n;
+    wire ena;
+    wire [7:0] ui_in;
     wire [7:0] uo_out;
-
-    reg [7:0] uio_in;
+    wire [7:0] uio_in;
     wire [7:0] uio_out;
     wire [7:0] uio_oe;
+
+    assign clk = pclk;
+    assign rst_n = presetn;
+    assign ena = psel;
+    assign ui_in = pwdata;
+    assign uo_out = prdata;
+    assign uio_in = {3'bxxx, pwrite, penable, paddr};
+    assign uio_out = {1'bx, pslverr, pready, 5'bxxxxx};
 
     tt_um_pchri03_top top(
         .clk(clk),
@@ -33,19 +49,84 @@ module tb();
     end
 
     initial begin
-        clk = 1'b0;
+        pclk = 1'b1;
         forever begin
-            #10 clk = ~clk;
+            #10 pclk = ~pclk;
         end
     end
 
     initial begin
-        rst_n = 1'b0;
-        #60 rst_n = 1'b1; 
+        presetn = 1'b0;
+        #50 presetn = 1'b1; 
     end
 
     initial begin
-        ena = 1'b0;
-        #100 ena = 1'b1;
+        psel = 1'b0;
+
+        #98
+        psel = 1'b1;
+        paddr = 3'h0;
+        pwrite = 1'b1;
+        pwdata = 8'hDE;
+        penable = 1'b0;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        paddr = 3'h1;
+        pwdata = 8'hAD;
+        penable = 1'b0;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        paddr = 3'h2;
+        pwdata = 8'hBE;
+        penable = 1'b0;
+
+        #20
+        penable = 1'b1;
+        #20
+        paddr = 3'h3;
+        pwdata = 8'hEF;
+        penable = 1'b0;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        penable = 1'b0;
+        paddr = 3'h0;
+        pwrite = 1'b0;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        penable = 1'b0;
+        paddr = 3'h1;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        penable = 1'b0;
+        paddr = 3'h2;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        penable = 1'b0;
+        paddr = 3'h3;
+
+        #20
+        penable = 1'b1;
+
+        #20
+        penable = 1'b0;
     end
+
 endmodule
