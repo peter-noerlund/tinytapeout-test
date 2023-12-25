@@ -31,7 +31,7 @@ module tt_um_pchri03_top
         .pwdata(ui_in),
         .pstrb(1'b1),
         .pready(uio_out[5]),
-        .prdata(uio_out),
+        .prdata(uo_out),
         .pslverr(uio_out[6])
     );
 
